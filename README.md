@@ -1,6 +1,6 @@
 Integrate the [backtrace-android](https://github.com/backtrace-labs/backtrace-android) error reporting library with your Unreal Engine game for Android written in Java or Kotlin.
 
-1. Download [UEBacktraceWrapper]() package.
+1. Download [BacktraceWrapper](https://github.com/backtrace-labs/backtrace-unreal-android/releases) package.
 1. In the directory for your Unreal Engine project, locate your app or game's `Build.cs` file.
 1. Place the `BacktraceAndroid_UPL.xml` file in the same directory with the `Build.cs` file.
 1. In the `Build.cs` file, add the following lines at the end of the `ModuleRules` class constructor:
@@ -13,8 +13,8 @@ Integrate the [backtrace-android](https://github.com/backtrace-labs/backtrace-an
    }
    ```
 
-1. Place the [BacktraceWrapper.h]() and [BacktraceWrapper.cpp]() files in the same directory and add BacktraceWrapper to your GameInstance.
-1. To initialize the Backtrace client, use `BacktraceIO::FInitializeBacktraceClient` with the name of your [subdomain and a submission token](/error-reporting/platform-integrations/unreal/setup/#what-youll-need) as a SubmissionUrl.
+1. Place the `BacktraceWrapper.h` and `BacktraceWrapper.cpp` files in the same directory and add BacktraceWrapper to your GameInstance.
+1. To initialize the Backtrace client, use `BacktraceIO::FInitializeBacktraceClient` with the name of your [subdomain and a submission token](https://docs.saucelabs.com/error-reporting/platform-integrations/unreal/setup/#what-youll-need) as a SubmissionUrl.
      ```cpp
      FString SubmissionUrl = TEXT("https://submit.backtrace.io/{subdomain}/{submission-token}/json");
      BacktraceIO::FInitializeBacktraceClient(SubmissionUrl, Attributes, Attachments);
@@ -35,4 +35,4 @@ Integrate the [backtrace-android](https://github.com/backtrace-labs/backtrace-an
    ```
    For more details on how to convert your Unreal Engine paths to Android paths, see the conversion functions for `FAndroidPlatformFile::PathToAndroidPaths` in the `AndroidPlatformFile.cpp` file.
 
-To change the default configuration settings for the Backtrace client, you can change the settings in the `BacktraceAndroid_UPL.xml` file. For more information, see [Configuring Backtrace for Android](/error-reporting/platform-integrations/android/configuration/) for the backtrace-android library.
+To change the default configuration settings for the Backtrace client, you can change the settings in the `BacktraceAndroid_UPL.xml` file. For more information, see [Configuring Backtrace for Android](https://docs.saucelabs.com/error-reporting/platform-integrations/android/configuration/) for the backtrace-android library.
