@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+	<init>
+		<log text="Backtrace Android" />
+	</init>
+	<resourceCopies>
+	</resourceCopies>
+	<gradleProperties>
+		<insert>
+			android.bundle.enableUncompressedNativeLibs=false
+		</insert>
+	</gradleProperties>
+	<proguardAdditions>
+		<insert>
+			-keep class com.google.gson.**.* { *; }
+		</insert>
+		<insert>
+			-keep class backtraceio.library.**.* { *; }
+		</insert>
+	</proguardAdditions>
+	<AARImports>
+		<insertValue value="com.github.backtrace-labs.backtrace-android,backtrace-library,3.9.0" />
+		<insertNewline />
+	</AARImports>
+	<gameActivityImportAdditions>
+		<insert>
+			import android.util.Log;
+			import backtraceio.library.BacktraceClient;
+			import backtraceio.library.BacktraceCredentials;
+			import backtraceio.library.BacktraceDatabase;
+			import backtraceio.library.base.BacktraceBase;
+			import backtraceio.library.enums.database.RetryBehavior;
+			import backtraceio.library.enums.database.RetryOrder;
+			import backtraceio.library.models.BacktraceExceptionHandler;
+			import backtraceio.library.models.database.BacktraceDatabaseSettings;
+			import backtraceio.library.models.json.BacktraceReport;
+		</insert>
+	</gameActivityImportAdditions>
+	<gameActivityClassAdditions>
+		<insert>
+			private BacktraceClient backtraceClient;
+
+			private final int anrTimeout = 3000;
+
+			public void initializeBacktraceClient(String submissionUrl, Map&lt;String, Object&gt; attributes,
+			List&lt;String&gt; attachments) {
+
+			Context context = getApplicationContext();
+
+			// Submission url
+			BacktraceCredentials credentials = new BacktraceCredentials(submissionUrl);
+
+			// Customize offline database settings
+			String dbPath = context.getFilesDir().getAbsolutePath();
+			BacktraceDatabaseSettings settings = new BacktraceDatabaseSettings(dbPath);
+			BacktraceDatabase database = new BacktraceDatabase(context, settings);
+
+			backtraceClient = new BacktraceClient(context, credentials, database, attributes, attachments);
+
+			// Enable handling of native crashes
+			database.setupNativeIntegration(backtraceClient, credentials);
+
+			// Enable uncaught exceptions
+			BacktraceExceptionHandler.enable(backtraceClient);
+
+			// Enable inner exceptions
+			backtraceClient.sendInnerExceptions(true);
+
+			// Enable suppressed exceptions
+			backtraceClient.sendSuppressedExceptions(true);
+
+			// Enable breadcrumbs
+			backtraceClient.enableBreadcrumbs(context);
+
+			// Enable ANR detection
+			backtraceClient.enableAnr(anrTimeout);
+
+			// Enable Crash Free metrics
+			backtraceClient.metrics.enable();
+
+			// Uncomment this to send a test report
+			// backtraceClient.send("Android Unreal Engine Test");
+			}
+		</insert>
+	</gameActivityClassAdditions>
+	<gameActivityOnCreateAdditions>
+		<insert>
+		</insert>
+	</gameActivityOnCreateAdditions>
+</root>
